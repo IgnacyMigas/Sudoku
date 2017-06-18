@@ -6,7 +6,7 @@ import abc
 class AbstractBoard(object):
     __metaclass__ = abc.ABCMeta
 
-    @abstractmethod
+    @abc.abstractmethod
     def put(self, x, y, value):
         pass
 
