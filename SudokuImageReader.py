@@ -1,10 +1,12 @@
 import numpy as np
 import cv2
 import pytesseract
+import Board
 from PIL import Image
 
 class SudokuImageReader:
-    def __init__(self):
+    def __init__(self, imageFilename):
+        self.imageFilename = imageFilename
         self.xBlockSize = 100
         self.yBlockSize = 100
         self.blocksNumber = 9
@@ -12,6 +14,7 @@ class SudokuImageReader:
         self.cornersList = []
         self.sudokuBinaryImg = None
         self.sudokuBlock = None
+        self.board = Board.Board()
         self.readImgFromFile()
         self.convertImgToBinary()
         self.findSudokuContours()
@@ -20,7 +23,7 @@ class SudokuImageReader:
         self.showImg()
 
     def readImgFromFile(self):
-        self.sudokuImg = cv2.imread('sudoku.jpg')
+        self.sudokuImg = cv2.imread(self.imageFilename)
         self.sudokuImg = cv2.resize(self.sudokuImg, self.size)
         self.sudokuBWImg = cv2.cvtColor(self.sudokuImg, cv2.COLOR_BGR2GRAY)
 
@@ -71,7 +74,7 @@ class SudokuImageReader:
             x, y, w, h = cv2.boundingRect(cnt)
             #if are of contours is to big, we ignore it
             #otherwise we appen
-            if w * h > 1200:
+            if w * h > 900:
                 countoursList.append(cnt)
 
         _, _, _w, _h = cv2.boundingRect(countoursList[0])
@@ -93,10 +96,12 @@ class SudokuImageReader:
 
     def cropBlockToDigit(self, image):
         x, y, w, h = self.findCountorsOfDigit(image)
+        #print(str(w * h > 8100) + str((10 > h or h > 60)) + str((10 > w or w > 60)))
 
-        if w * h > 8100:
+        if w * h > 8100 or (15 > h or h > 60) or (15 > w or w > 60):
             image = self.fillBlockWithWhitePixelsIfHasNotDigit()
         else:
+            #print(str(w) + " " + str(h))
             image = image[y:y+h,x:x+w]
             cv2.rectangle(self.sudokuImg, (self.xSize + x, self.ySize + y), (self.xSize + x + w, self.ySize + y + h),
                           (0, 255, 0), 2)
@@ -139,6 +144,11 @@ class SudokuImageReader:
         for row in self.sudokuList:
             print (", ".join(map(str, row)))
 
+
+    def getBoard(self):
+        self.board.set_board(self.sudokuList)
+        return self.board
+
     def showImg(self):
         cv2.imshow("Sudoki - binary", self.sudokuImg)
         cv2.waitKey(0)
@@ -146,4 +156,5 @@ class SudokuImageReader:
 
 
 if __name__ == "__main__":
-    sud = SudokuImageReader()
+    filename = "sudoku4.jpg"
+    sud = SudokuImageReader(filename)
