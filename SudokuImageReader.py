@@ -94,7 +94,7 @@ class SudokuImageReader:
         image.fill(255)
         return image
 
-    def cropBlockToDigit(self, image):
+    def cropBlockToDigit(self, image, i, j):
         x, y, w, h = self.findCountorsOfDigit(image)
         #print(str(w * h > 8100) + str((10 > h or h > 60)) + str((10 > w or w > 60)))
 
@@ -103,6 +103,9 @@ class SudokuImageReader:
         else:
             #print(str(w) + " " + str(h))
             image = image[y:y+h,x:x+w]
+
+            #im = Image.fromarray(border)
+            #im.save(str(i)+ "_" + str(j) + ".png")
             cv2.rectangle(self.sudokuImg, (self.xSize + x, self.ySize + y), (self.xSize + x + w, self.ySize + y + h),
                           (0, 255, 0), 2)
         #print(image)
@@ -115,11 +118,12 @@ class SudokuImageReader:
         self.sudokuImgCrop = self.sudokuImg[self.ySize:self.ySize + self.yBlockSize, self.xSize:self.xSize + self.xBlockSize]
 
         img = cv2.bitwise_not(self.sudokuBinaryImg[self.ySize:self.ySize + self.yBlockSize, self.xSize:self.xSize + self.xBlockSize])
-        self.sudokuBlock = self.cropBlockToDigit(img)
+        self.sudokuBlock = self.cropBlockToDigit(img, x, y)
 
     def getDigitFromBlock(self):
+        self.sudokuBlock = cv2.copyMakeBorder(self.sudokuBlock, 20, 20, 20, 20, cv2.BORDER_CONSTANT, value=[255, 255, 255])
         img = Image.fromarray(self.sudokuBlock)
-        digit = pytesseract.image_to_string(img, config = "-psm 10")
+        digit = pytesseract.image_to_string(img, config='-psm 7')
 
         for s in list(digit):
             if s.isdigit():
@@ -156,5 +160,5 @@ class SudokuImageReader:
 
 
 if __name__ == "__main__":
-    filename = "sudoku4.jpg"
+    filename = "sudoku.jpg"
     sud = SudokuImageReader(filename)
