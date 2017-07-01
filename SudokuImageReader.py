@@ -121,17 +121,16 @@ class SudokuImageReader:
         self.sudokuBlock = self.cropBlockToDigit(img, x, y)
 
     def getDigitFromBlock(self):
+        retVal = 0
         self.sudokuBlock = cv2.copyMakeBorder(self.sudokuBlock, 20, 20, 20, 20, cv2.BORDER_CONSTANT, value=[255, 255, 255])
         img = Image.fromarray(self.sudokuBlock)
         digit = pytesseract.image_to_string(img, config='-psm 7')
 
         for s in list(digit):
             if s.isdigit():
-                digit = s
-            else:
-                digit = ' '
+                retVal = int(s)
 
-        return digit
+        return retVal
 
 
     def readDigitsFromImg(self):
@@ -140,7 +139,6 @@ class SudokuImageReader:
             listSudokuRows = []
             for y in range(0, self.blocksNumber):
                 self.cropImgToBlock(x,y)
-
                 listSudokuRows.append(self.getDigitFromBlock())
             self.sudokuList.append(listSudokuRows)
 
