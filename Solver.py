@@ -50,6 +50,11 @@ class Solver(AbstractSolver):
             return False
         return self._next(x, y)
 
+    def printSolve(self):
+        print "\nSolve: "
+        for row in self.solveBoard:
+            print ", ".join(map(str, row))
+
 if __name__ == "__main__":
     board = Board.Board()
     print board.put(0, 0, 8)
