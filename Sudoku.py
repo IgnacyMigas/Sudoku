@@ -7,4 +7,4 @@ if __name__ == "__main__":
     reader = SudokuImageReader.SudokuImageReader(image)
     sudoku = Solver.Solver(reader.getBoard())
     sudoku.solve()
-    print sudoku.solveBoard
+    sudoku.printSolve()
