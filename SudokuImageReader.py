@@ -143,6 +143,7 @@ class SudokuImageReader:
             self.sudokuList.append(listSudokuRows)
 
         self.sudokuList = list(map(list, zip(*self.sudokuList)))
+        print "Sudoku: "
         for row in self.sudokuList:
             print (", ".join(map(str, row)))
 
@@ -152,7 +153,7 @@ class SudokuImageReader:
         return self.board
 
     def showImg(self):
-        cv2.imshow("Sudoki - binary", self.sudokuImg)
+        cv2.imshow("Sudoku", self.sudokuImg)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
