@@ -15,15 +15,19 @@ class Solver(AbstractSolver):
     def __init__(self, board=Board.Board()):
         self.board = board
         self.solveBoard = numpy.zeros((9, 9), int)
+        board = self.board.get_board()
         for i in range(9):
             for j in range(9):
-                self.solveBoard[i][j] = self.board.get_board()[i][j]
+                self.solveBoard[i][j] = board[i][j]
 
     def solve(self):
         if self._solve(0, 0):
             self.board.set_board(self.solveBoard)
             return True
         return False
+
+    def getBoars(self):
+        return self.board
 
     def _can_insert(self, x, y, value):
         for i in range(9):
