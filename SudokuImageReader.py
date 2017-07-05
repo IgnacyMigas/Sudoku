@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import pytesseract
 import Board
+import thread
 from PIL import Image
 
 class SudokuImageReader:
@@ -20,7 +21,7 @@ class SudokuImageReader:
         self.findSudokuContours()
         self.correctPerspective()
         self.readDigitsFromImg()
-        self.showImg()
+        thread.start_new_thread(self.showImg, ())
 
     def readImgFromFile(self):
         self.sudokuImg = cv2.imread(self.imageFilename)
