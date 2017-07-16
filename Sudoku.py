@@ -1,3 +1,5 @@
+#!/usr/bin/pyhon2.7.9
+
 import SudokuImageReader
 import Solver
 import os
